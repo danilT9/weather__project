@@ -98,14 +98,19 @@ export const PetsNews = () => {
     const fetchNews = async () => {
       try {
         const nowDate = new Date();
-        const year = nowDate.getFullYear();
-        const month = String(nowDate.getMonth() + 1).padStart(2, '0');
-        const day = String(nowDate.getDate()).padStart(2, '0');
-        const dateString = `${year}-${month}-${day}`;
-        
+        const dateString = `${nowDate.getFullYear()}-${nowDate.getMonth()}-${nowDate.getDate()}`;
+        console.log(dateString);
         const res = await getNewsFromApi({ data: dateString });
         if (res && res.articles) {
           setArticles(res.articles);
+        }
+        if (res && res.articles.length === 0) {
+          const dateString = `${nowDate.getFullYear()}-${nowDate.getMonth()}-${nowDate.getDate() - 1}`;
+          const res = await getNewsFromApi({ data: dateString });
+          console.log(dateString);
+          if (res.articles) {
+            setArticles(res.articles);
+          }
         }
       } catch (e) {
         console.log(e);

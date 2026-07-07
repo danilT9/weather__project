@@ -98,7 +98,11 @@ export const PetsNews = () => {
     const fetchNews = async () => {
       try {
         const nowDate = new Date();
-        const dateString = `${nowDate.getFullYear()}-${nowDate.getMonth()}-${nowDate.getDate()}`;
+        const year = nowDate.getFullYear();
+        const month = String(nowDate.getMonth() + 1).padStart(2, '0');
+        const day = String(nowDate.getDate()).padStart(2, '0');
+        const dateString = `${year}-${month}-${day}`;
+        
         const res = await getNewsFromApi({ data: dateString });
         if (res && res.articles) {
           setArticles(res.articles);

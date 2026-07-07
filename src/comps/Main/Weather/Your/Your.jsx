@@ -15,6 +15,7 @@ const WeatherList = styled.ul`
   font-weight: 500;
   font-size: 14px;
   width: 100%;
+  max-width: 1440px;
   z-index: 1;
   padding: 0;
   margin: 0;

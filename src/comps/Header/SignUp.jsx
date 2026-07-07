@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { styled } from "styled-components";
 
 const ModalOverlay = styled.div`
@@ -65,6 +66,7 @@ const Title = styled.h2`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 18px;
   width: 100%;
   box-sizing: border-box;
@@ -104,15 +106,14 @@ const FormGroup = styled.div`
 `;
 
 const SubmitButton = styled.button`
-  width: 100%;
+  width: 114px;
   height: 45px;
   background-color: #FFB36C;
   border: none;
   border-radius: 8px;
-  color: white;
+  color: black;
   font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
   margin-top: 10px;
   transition: background 0.2s;
   box-sizing: border-box;
@@ -122,6 +123,17 @@ const SubmitButton = styled.button`
 `;
 
 export const SignUp = ({ onClose, signData, setSignData }) => {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
+  }, [onClose]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSignData(prev => ({ ...prev, [name]: value }));

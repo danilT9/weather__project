@@ -22,6 +22,17 @@ export const Header = () => {
     }
   }, [isModalOpen]);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isMenuOpen]);
+
   const toggleMenu = () => {
     setIsMenuOpen(prev => !prev);
   };

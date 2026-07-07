@@ -3,6 +3,7 @@ import { getWeatherIcon } from "../WIcon";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { LuRefreshCw } from "react-icons/lu";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { ClipLoader } from "react-spinners";
 
 const WeatherList = styled.ul`
   display: flex;
@@ -20,10 +21,6 @@ const WeatherList = styled.ul`
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  * {
-    padding: 0;
-    margin: 0;
-  }
   button {
     cursor: pointer;
   }
@@ -159,7 +156,14 @@ const WeatherListItemContainerButtonsStyled = styled.div`
 `;
 
 const WeatherListItem = ({ city, weatherData, isActive, onSelect, onRefresh, onDelete, onToggleFavorite, setViewMode }) => {
-  if (!weatherData) return <WeatherListItemStyled>Loading data...</WeatherListItemStyled>;
+  if (!weatherData) {
+    return (
+      <WeatherListItemStyled $isActive={isActive}>
+        <ClipLoader color="#FFB36C" size={40} />
+      </WeatherListItemStyled>
+    );
+  }
+
   const currentPeriod = weatherData.list?.[0];
   const temp = currentPeriod ? Math.round(currentPeriod.main.temp) : "--";
   const iconCode = currentPeriod ? currentPeriod.weather[0].icon : "01d";

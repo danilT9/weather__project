@@ -5,6 +5,7 @@ import { Info } from "./Info/Info";
 import { Diagram } from "./Diagram/Diagram";
 import { WeekInfo } from "./WeekInfo/WeekInfo";
 import { styled } from "styled-components";
+import { ClipLoader } from "react-spinners";
 
 const Container = styled.div`
   display: flex;
@@ -22,6 +23,14 @@ const EmptyContainer = styled.div`
   color: #666;
   text-align: center;
   margin-top: 40px;
+`;
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 200px;
 `;
 
 const DEFAULT_CITIES = [
@@ -75,26 +84,18 @@ export const Weather = ({ coords }) => {
             isFavorite: false
           };
 
-          const hasFavorites = cities.some(c => c.isFavorite);
-          let updatedCities = [];
-          
-          if (!hasFavorites && cities.length === 3 && cities.some(c => c.name === "Kyiv") && cities.some(c => c.name === "Copenhagen")) {
-            updatedCities = [...cities, newCity];
-          } else {
-            updatedCities = [...cities, newCity];
-          }
-
+          const updatedCities = [...cities, newCity];
           setCities(updatedCities);
           setCitiesWeatherData(prev => ({ ...prev, [cityId]: res }));
           setActiveCityId(cityId);
         } catch (e) {
-          console.error(e);
+          console.log(e);
         }
       };
 
       addNewCity();
     }
-  }, [coords]);
+  }, [coords, cities]);
 
   useEffect(() => {
     const fetchAllCitiesWeather = async () => {
@@ -106,7 +107,7 @@ export const Weather = ({ coords }) => {
           const res = await getForecastFromApi({ lat: city.lat, lon: city.lon });
           updatedData[city.id] = res;
         } catch (e) {
-          console.error(e);
+          console.log(e);
         }
       }
       setCitiesWeatherData(updatedData);
@@ -128,7 +129,7 @@ export const Weather = ({ coords }) => {
       const res = await getForecastFromApi(cityCoords);
       setCitiesWeatherData(prev => ({ ...prev, [id]: res }));
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   };
 
@@ -173,7 +174,9 @@ export const Weather = ({ coords }) => {
       {cities.length === 0 ? (
         <EmptyContainer>Please search for a location to display the weather dashboard.</EmptyContainer>
       ) : loading && Object.keys(citiesWeatherData).length === 0 ? (
-        <p>Loading weather dashboard...</p>
+        <LoaderWrapper>
+          <ClipLoader color="#FFB36C" size={50} speedMultiplier={0.8} />
+        </LoaderWrapper>
       ) : (
         <>
           <Your 

@@ -13,6 +13,14 @@ const InfoContainer = styled.div`
   font-family: 'Montserrat', sans-serif;
   background-color: #E8E8E8;
   border-radius: 20px;
+  box-sizing: border-box;
+
+  @media (max-width: 1140px) {
+    width: 100%;
+  }
+  @media (max-width: 480px) {
+    padding: 20px 0;
+  }
 `;
 
 const InfoList = styled.ul`
@@ -24,6 +32,13 @@ const InfoList = styled.ul`
   flex-wrap: wrap;
   gap: 50px;
   padding: 0;
+  margin: 0;
+  @media (max-width: 768px) {
+    gap: 20px;
+  }
+  @media (max-width: 320px) {
+    gap: 10px;
+  }
 `;
 
 const InfoItemStyled = styled.li`
@@ -58,6 +73,18 @@ const InfoItemStyled = styled.li`
     align-items: center;
     justify-content: center;
   }
+
+  @media (max-width: 480px) {
+    width: 140px;
+    height: 150px;
+    p:first-child { font-size: 12px; }
+    p:nth-child(2) { font-size: 18px; }
+  }
+  @media (max-width: 320px) {
+    width: 130px;
+    height: 130px;
+    p:nth-child(2) { font-size: 15px; }
+  }
 `;
 
 const InfoItem = ({ title, content, icon }) => {
@@ -83,36 +110,12 @@ export const Info = ({ currentPeriod }) => {
   return (
     <InfoContainer>
       <InfoList>
-        <InfoItem
-          title="Feels like"
-          content={feelsLike}
-          icon={<WiThermometer size={65} />}
-        />
-        <InfoItem
-          title="Temperature Range"
-          content={tempRange}
-          icon={<WiThermometer size={65} />}
-        />
-        <InfoItem
-          title="Humidity"
-          content={humidity}
-          icon={<WiHumidity size={65} />}
-        />
-        <InfoItem
-          title="Pressure"
-          content={pressure}
-          icon={<WiBarometer size={65} />}
-        />
-        <InfoItem
-          title="Wind speed"
-          content={windSpeed}
-          icon={<WiStrongWind size={65} />}
-        />
-        <InfoItem
-          title="Visibility"
-          content={visibility}
-          icon={<MdOutlineVisibility size={55} />}
-        />
+        <InfoItem title="Feels like" content={feelsLike} icon={<WiThermometer size={45} />} />
+        <InfoItem title="Temperature Range" content={tempRange} icon={<WiThermometer size={45} />} />
+        <InfoItem title="Humidity" content={humidity} icon={<WiHumidity size={45} />} />
+        <InfoItem title="Pressure" content={pressure} icon={<WiBarometer size={45} />} />
+        <InfoItem title="Wind speed" content={windSpeed} icon={<WiStrongWind size={45} />} />
+        <InfoItem title="Visibility" content={visibility} icon={<MdOutlineVisibility size={40} />} />
       </InfoList>
     </InfoContainer>
   );

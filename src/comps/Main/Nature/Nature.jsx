@@ -3,7 +3,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Mousewheel } from "swiper/modules";
 import { getImagesByApi } from "../../../api/images/images.js";
 import { styled } from "styled-components";
-
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 
@@ -15,18 +14,19 @@ const Container = styled.div`
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
   user-select: none;
-`
+  box-sizing: border-box;
+`;
 
 const Title = styled.p`
   font-size: 20px;
-`
+`;
 
 const ImageStyled = styled.img`
   width: 100%;
   height: 211px;
-  objectFit: cover;
+  object-fit: cover;
   display: block;
-`
+`;
 
 export const Nature = () => {
   const [images, setImages] = useState([]);
@@ -42,13 +42,13 @@ export const Nature = () => {
       } catch (e) {
         console.log(e);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
-    fetchImages()
+    };
+    fetchImages();
   }, []);
 
-  if (isLoading) return <p>Loading...</p>
+  if (isLoading) return <p>Loading...</p>;
   
   return (
     <Container>
@@ -72,14 +72,11 @@ export const Nature = () => {
         style={{ width: "100%", padding: "50px 0" }}
       >
         {images.map(img => (
-          <SwiperSlide key={img.id} style={{ width: "384px" }}>
-            <ImageStyled 
-              src={img.largeImageURL} 
-              alt={"nature_image"}
-            />
+          <SwiperSlide key={img.id} style={{ width: "280px" }}>
+            <ImageStyled src={img.largeImageURL} alt={"nature_image"} />
           </SwiperSlide>
         ))}
       </Swiper>
     </Container>
   );
-}
+};

@@ -1,7 +1,7 @@
 {
   "name": "weather__project",
   "version": "0.1.0",
-  "homepage": "",
+  "homepage": "https://danilt9.github.io/weather__project",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -18,7 +18,9 @@
     "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.7",
     "react-icons": "^5.7.0",
+    "react-loader-spinner": "^8.0.2",
     "react-scripts": "5.0.1",
+    "react-spinners": "^0.17.0",
     "react-toastify": "^11.1.0",
     "styled-components": "^6.4.2",
     "swiper": "^14.0.1",
@@ -28,7 +30,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [

@@ -14,18 +14,35 @@ const Container = styled.main`
   box-sizing: border-box;
   width: 100%;
   gap: 70px;
+  padding: 0 20px;
+
+  @media (max-width: 768px) {
+    margin-top: 40px;
+    gap: 50px;
+    padding: 0 15px;
+    .hidden-mobile {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    margin-top: 30px;
+    gap: 40px;
+    padding: 0 10px;
+  }
 `;
 
 export const Main = () => {
-  const [coords, setCoords] = useState({ lat: 50.0755, lon: 14.4378 });
-  
+  const [coords, setCoords] = useState({ lat: 50.4501, lon: 30.5234 });
   return (
     <main>
       <Banner onCitySelect={setCoords} />
       <Container>
         <Weather coords={coords} />
-        <PetsNews />
-        <Nature />
+        <div className="hidden-mobile" style={{ width: "100%", display: "flex", flexDirection: "column", gap: "70px", alignItems: "center" }}>
+          <PetsNews />
+          <Nature />
+        </div>
       </Container>
     </main>
   );

@@ -1,136 +1,181 @@
-import { styled } from "styled-components"
-import { useEffect, useState } from "react";
+import { styled } from "styled-components";
 
-const Backdrop = styled.div`
-  font-family: "Montserrat", sans-serif;
-  font-weight: 500;
+const ModalOverlay = styled.div`
   position: fixed;
-  left: 0;
   top: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 1000;
-  background-color: rgba(0, 0, 0, 0.8);
-`;
-
-const Content = styled.div`
-  width: 600px;
-  height: 534px;
-  background-color: white;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  border-radius: 25px;
+  z-index: 10000;
+  padding: 10px;
+  box-sizing: border-box;
 `;
 
-const Title = styled.p`
-  font-size: 28px;
-`
+const ModalContent = styled.div`
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 450px;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+
+  @media (max-width: 480px) {
+    padding: 25px 20px;
+    border-radius: 15px;
+  }
+  @media (max-width: 320px) {
+    padding: 20px 15px;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  line-height: 1;
+  &:hover {
+    color: #000;
+  }
+`;
+
+const Title = styled.h2`
+  margin: 0 0 25px 0;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  color: #333;
+  @media (max-width: 480px) {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+`;
 
 const Form = styled.form`
-  width: 600px;
-  height: 534px;
-  background-color: white;
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  border-radius: 25px;
-  gap: 15px;
-
-  p {
-    font-size: 14px;
-  }
-  input {
-    width: 420px;
-    height: 30px;
-    padding: 5px 10px;
-    border-radius: 10px;
-    border: none;
-    background-color: #E4E4E4;
-  }
-  button {
-    padding: 10px 30px;
-    border: none;
-    border-radius: 10px;
-    background-color: #FFB36C;
+  gap: 18px;
+  width: 100%;
+  box-sizing: border-box;
+  @media (max-width: 480px) {
+    gap: 14px;
   }
 `;
 
-const ContainerLogIn = styled.div`
+const FormGroup = styled.div`
   display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-  p {
-    margin: 0;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
   }
-`
+  
+  input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    &:focus {
+      border-color: #FFB36C;
+      background-color: #fff;
+    }
+  }
+`;
 
-const LogInA = styled.a`
-  text-decoration: none;
-`
+const SubmitButton = styled.button`
+  width: 100%;
+  height: 45px;
+  background-color: #FFB36C;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: background 0.2s;
+  box-sizing: border-box;
+  &:hover {
+    background-color: #ffa043;
+  }
+`;
 
 export const SignUp = ({ onClose, signData, setSignData }) => {
-  useEffect(() => {
-    const handleKeyClose = (e) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    }
-    window.addEventListener("keydown", handleKeyClose);
-    return () => window.removeEventListener("keydown", handleKeyClose);
-  }, [onClose])
-
   const handleChange = (e) => {
-    setSignData(prevData => ({
-      ...prevData,
-      [e.target.name]: e.target.value
-    }));
+    const { name, value } = e.target;
+    setSignData(prev => ({ ...prev, [name]: value }));
   };
-  
-  const handleSumbit = (e) => {
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (signData.username.length > 3 && signData.password.length > 8) {
-      localStorage.setItem("account", JSON.stringify(signData));
-      setSignData(({
-        username: "",
-        email: "",
-        password: "",
-      }));
-      onClose()
-    } else {
-      alert("Incorrect data value.");
-    }
-  }
-  
+    if (!signData.username || !signData.email || !signData.password) return;
+    localStorage.setItem("account", JSON.stringify(signData));
+    onClose();
+  };
+
   return (
-    <Backdrop onClick={() => onClose()}>
-      <Content onClick={(e) => e.stopPropagation()}>
-        <Title>Sign up</Title>
-        <Form onSubmit={handleSumbit}>
-          <div>
-            <p>Username</p>
-            <input onChange={handleChange} name="username" placeholder="Username" type="text" value={signData.username} />
-          </div>
-          <div>
-            <p>E-Mail</p>
-            <input onChange={handleChange} name="email" placeholder="E-Mail" type="email" value={signData.email} />
-          </div>
-          <div>
-            <p>Password</p>
-            <input onChange={handleChange} name="password" placeholder="Password" type="password" value={signData.password} />
-          </div>
-          <button type="submit">Sign up</button>
+    <ModalOverlay onClick={onClose}>
+      <ModalContent onClick={(e) => e.stopPropagation()}>
+        <CloseButton onClick={onClose}>&times;</CloseButton>
+        <Title>Create Account</Title>
+        <Form onSubmit={handleSubmit}>
+          <FormGroup>
+            <label>Username</label>
+            <input 
+              type="text" 
+              name="username" 
+              value={signData.username} 
+              onChange={handleChange} 
+              placeholder="Enter your username" 
+              required 
+            />
+          </FormGroup>
+          <FormGroup>
+            <label>Email</label>
+            <input 
+              type="email" 
+              name="email" 
+              value={signData.email} 
+              onChange={handleChange} 
+              placeholder="Enter your email" 
+              required 
+            />
+          </FormGroup>
+          <FormGroup>
+            <label>Password</label>
+            <input 
+              type="password" 
+              name="password" 
+              value={signData.password} 
+              onChange={handleChange} 
+              placeholder="Enter your password" 
+              required 
+            />
+          </FormGroup>
+          <SubmitButton type="submit">Sign Up</SubmitButton>
         </Form>
-        <ContainerLogIn>
-          <p>Already have an account?</p>
-          <LogInA href=".">Log In</LogInA>
-        </ContainerLogIn>
-      </Content>
-    </Backdrop>
-  )
-}
+      </ModalContent>
+    </ModalOverlay>
+  );
+};

@@ -24,16 +24,29 @@ const EmptyContainer = styled.div`
   margin-top: 40px;
 `;
 
+const DEFAULT_CITIES = [
+  { id: "50.4501-30.5234", name: "Kyiv", country: "UA", lat: 50.4501, lon: 30.5234, isFavorite: false },
+  { id: "55.6761-12.5683", name: "Copenhagen", country: "DK", lat: 55.6761, lon: 12.5683, isFavorite: false },
+  { id: "52.5200-13.4050", name: "Berlin", country: "DE", lat: 52.5200, lon: 13.4050, isFavorite: false }
+];
+
 export const Weather = ({ coords }) => {
   const [cities, setCities] = useState(() => {
     const saved = localStorage.getItem("weather_cities");
-    return saved ? JSON.parse(saved) : [];
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      const hasFavorites = parsed.some(c => c.isFavorite);
+      if (hasFavorites) {
+        return parsed;
+      }
+    }
+    return DEFAULT_CITIES;
   });
 
   const [citiesWeatherData, setCitiesWeatherData] = useState({});
   const [activeCityId, setActiveCityId] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [viewMode, setViewMode] = useState("hourly");
+  const [viewMode, setViewMode] = useState("none");
 
   useEffect(() => {
     localStorage.setItem("weather_cities", JSON.stringify(cities));
@@ -62,7 +75,16 @@ export const Weather = ({ coords }) => {
             isFavorite: false
           };
 
-          setCities(prev => [...prev, newCity]);
+          const hasFavorites = cities.some(c => c.isFavorite);
+          let updatedCities = [];
+          
+          if (!hasFavorites && cities.length === 3 && cities.some(c => c.name === "Kyiv") && cities.some(c => c.name === "Copenhagen")) {
+            updatedCities = [...cities, newCity];
+          } else {
+            updatedCities = [...cities, newCity];
+          }
+
+          setCities(updatedCities);
           setCitiesWeatherData(prev => ({ ...prev, [cityId]: res }));
           setActiveCityId(cityId);
         } catch (e) {
@@ -72,7 +94,7 @@ export const Weather = ({ coords }) => {
 
       addNewCity();
     }
-  }, [coords, cities]);
+  }, [coords]);
 
   useEffect(() => {
     const fetchAllCitiesWeather = async () => {
@@ -99,7 +121,7 @@ export const Weather = ({ coords }) => {
     };
 
     fetchAllCitiesWeather();
-  }, [cities, activeCityId]);
+  }, [cities]);
 
   const handleRefreshCity = async (id, cityCoords) => {
     try {
@@ -112,15 +134,33 @@ export const Weather = ({ coords }) => {
 
   const handleDeleteCity = (id) => {
     const filtered = cities.filter(c => c.id !== id);
-    setCities(filtered);
-    if (activeCityId === id) {
-      setActiveCityId(filtered.length > 0 ? filtered[0].id : null);
+    const hasFavorites = filtered.some(c => c.isFavorite);
+    
+    if (filtered.length === 0 && !hasFavorites) {
+      setCities(DEFAULT_CITIES);
+      setActiveCityId(DEFAULT_CITIES[0].id);
+    } else {
+      setCities(filtered);
+      if (activeCityId === id) {
+        setActiveCityId(filtered.length > 0 ? filtered[0].id : null);
+      }
     }
   };
 
   const handleToggleFavorite = (id) => {
     setCities(prev => {
-      const updated = prev.map(c => c.id === id ? { ...c, isFavorite: !c.isFavorite } : c);
+      const targetCity = prev.find(c => c.id === id);
+      if (!targetCity) return prev;
+
+      const willBeFavorite = !targetCity.isFavorite;
+      let updated = prev.map(c => c.id === id ? { ...c, isFavorite: willBeFavorite } : c);
+
+      const wasShowingDefaults = prev.length >= 3 && prev.some(c => c.name === "Kyiv") && prev.some(c => c.name === "Copenhagen") && !prev.some(c => c.isFavorite);
+
+      if (wasShowingDefaults && willBeFavorite) {
+        updated = updated.filter(c => c.isFavorite);
+      }
+
       localStorage.setItem("weather_cities", JSON.stringify(updated));
       return updated;
     });
@@ -146,8 +186,7 @@ export const Weather = ({ coords }) => {
             onToggleFavorite={handleToggleFavorite}
             setViewMode={setViewMode}
           />
-          
-          {activeWeatherData && (
+          {activeWeatherData && viewMode !== "none" && (
             <>
               <Info currentPeriod={activeWeatherData?.list?.[0]} />
               {(viewMode === "all" || viewMode === "hourly") && <Diagram hourlyData={activeWeatherData?.list || []} />}

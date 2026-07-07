@@ -7,14 +7,16 @@
     align-items: center;
     position: absolute;
     left: 0;
-    width: 100dvw;
+    width: 100vw;
     background-color: #ffb36c;
+    box-sizing: border-box;
 }
 
 .footer__container {
     width: 100%;
     max-width: 1052px;
     box-sizing: border-box;
+    padding: 0 20px;
 }
 
 .footer__container__list {
@@ -24,15 +26,17 @@
     margin: 0;
     max-width: 1052px;
     width: 100%;
-    height: 179px;
+    min-height: 179px;
     gap: 103px;
+    flex-wrap: wrap;
 }
 
 .footer__container__list__item {
-    margin: 20px 0px;
-    h3 {
-        margin: 10px 0;
-    }
+    margin: 20px 0;
+}
+
+.footer__container__list__item h3 {
+    margin: 10px 0;
 }
 
 .footer__container__list__item__logo {
@@ -49,10 +53,11 @@
     gap: 0;
     margin: 0;
     padding: 0;
-    p {
-        margin: 0;
-        padding: 0;
-    }
+}
+
+.footer__container__list__item__list__address p {
+    margin: 0;
+    padding: 0;
 }
 
 .footer__container__list__item__list__contact {
@@ -61,8 +66,30 @@
     gap: 20px;
     margin: 0;
     padding: 0;
-    img {
-        width: 40px;
-        height: 40px;
+}
+
+.footer__container__list__item__list__contact img {
+    width: 40px;
+    height: 40px;
+}
+
+@media (max-width: 768px) {
+    .footer__container__list {
+        gap: 40px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .footer__container__list__item__list__contact {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 320px) {
+    .footer__container {
+        padding: 0 10px;
+    }
+    .footer__container__list {
+        gap: 25px;
     }
 }

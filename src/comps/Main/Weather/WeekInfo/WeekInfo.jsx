@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { getWeatherIcon } from '../WeatherIcon';
+import { getWeatherIcon } from '../WIcon';
 
 const Container = styled.div`
   background-color: #e9e9e9;
@@ -10,6 +10,12 @@ const Container = styled.div`
   max-width: 1140px;
   box-sizing: border-box;
   font-family: 'Arial', sans-serif;
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
+  @media (max-width: 320px) {
+    padding: 10px;
+  }
 `;
 
 const Title = styled.h3`
@@ -32,6 +38,13 @@ const DayRow = styled.div`
   background-color: #dcdcdc;
   border-radius: 12px;
   padding: 14px 24px;
+  @media (max-width: 480px) {
+    padding: 10px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 320px) {
+    padding: 8px;
+  }
 `;
 
 const DayName = styled.span`
@@ -39,6 +52,10 @@ const DayName = styled.span`
   font-weight: 500;
   color: #333;
   width: 120px;
+  @media (max-width: 480px) {
+    width: 100%;
+    margin-bottom: 5px;
+  }
 `;
 
 const WeatherInfo = styled.div`
@@ -51,6 +68,9 @@ const WeatherInfo = styled.div`
     color: #ffa755;
     display: flex;
     align-items: center;
+  }
+  @media (max-width: 480px) {
+    justify-content: flex-start;
   }
 `;
 
@@ -66,11 +86,14 @@ const Description = styled.span`
   text-align: right;
   width: 150px;
   text-transform: lowercase;
+  @media (max-width: 480px) {
+    text-align: left;
+    width: auto;
+  }
 `;
 
 export const WeekInfo = ({ hourlyData = [] }) => {
   const dailyMap = {};
-
   hourlyData.forEach((item) => {
     const dateStr = new Date(item.dt * 1000).toLocaleDateString('en-UA', {
       weekday: 'short',

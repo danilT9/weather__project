@@ -12,7 +12,7 @@ const BannerDiv = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 0;
-  padding: 0;
+  padding: 0 20px;
   box-sizing: border-box;
   width: 100vw;
   height: 500px;
@@ -24,12 +24,30 @@ const BannerDiv = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-`
+
+  @media (max-width: 768px) {
+    height: 400px;
+  }
+  @media (max-width: 480px) {
+    height: 350px;
+    padding: 0 10px;
+  }
+  @media (max-width: 320px) {
+    height: 320px;
+  }
+`;
 
 const TitleBanner = styled.p`
   font-weight: 600;
   font-size: 32px;
-`
+  text-align: center;
+  @media (max-width: 480px) {
+    font-size: 24px;
+  }
+  @media (max-width: 320px) {
+    font-size: 20px;
+  }
+`;
 
 const PhraseDiv = styled.div`
   display: flex;
@@ -57,7 +75,24 @@ const PhraseDiv = styled.div`
     padding-left: 25px;
     text-align: left;
   }
-`
+
+  @media (max-width: 768px) {
+    margin-right: 0;
+    margin-bottom: 60px;
+    justify-content: center;
+    font-size: 16px;
+    p:first-child, p:last-child {
+      text-align: center;
+      border: none;
+      padding: 0;
+      max-width: 100%;
+    }
+  }
+  @media (max-width: 320px) {
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+`;
 
 const InputFormDiv = styled.div`
   display: flex;
@@ -66,7 +101,7 @@ const InputFormDiv = styled.div`
   flex-direction: column;
   width: 100%;
   position: relative;
-`
+`;
 
 const InputForm = styled.form`
   display: flex;
@@ -86,6 +121,13 @@ const InputForm = styled.form`
     width: 580px;
     border-radius: 10px 0px 0px 10px;
     background-color: #D9D9D9;
+    @media (max-width: 768px) {
+      width: 85%;
+    }
+    @media (max-width: 320px) {
+      width: 75%;
+      font-size: 12px;
+    }
   }
   button {
     width: 45px;
@@ -95,9 +137,9 @@ const InputForm = styled.form`
     background-size: 19px;
     background-position: center;
     background-repeat: no-repeat;
-  }
-  button:hover {
-    background-color: #FFBB6C;
+    @media (max-width: 320px) {
+      width: 40px;
+    }
   }
 `;
 
@@ -116,6 +158,12 @@ const SuggestionsList = styled.ul`
   overflow-y: auto;
   z-index: 9999;
   box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  @media (max-width: 768px) {
+    width: 85%;
+  }
+  @media (max-width: 320px) {
+    width: 75%;
+  }
 `;
 
 const SuggestionItem = styled.li`
@@ -138,11 +186,10 @@ export const Banner = ({ onCitySelect }) => {
   const day = today.getDate();
 
   const date = `${monthYear} ${weekDay}, ${day}th`;
-  
+
   const handleInputChange = async (e) => {
     const value = e.target.value;
     setInputValue(value);
-
     if (value.trim().length >= 2) {
       const list = await getCitySuggestions(value);
       setSuggestions(list);
@@ -162,20 +209,16 @@ export const Banner = ({ onCitySelect }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputValue.trim() === '') return;
-
     if (suggestions.length > 0) {
       handleSelectSuggestion(suggestions[0]);
     }
   };
-  
+
   return (
     <BannerDiv>
       <TitleBanner>Weather dashboard</TitleBanner>
       <PhraseDiv>
-        <p>
-          Create your personal list of favorite cities and always be aware of
-          the weather.
-        </p>
+        <p>Create your personal list of favorite cities and always be aware of the weather.</p>
         <p>{date}</p>
       </PhraseDiv>
       <InputFormDiv>

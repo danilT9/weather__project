@@ -13,6 +13,12 @@ const ChartWrapper = styled.div`
   max-width: 1140px;
   box-sizing: border-box;
   font-family: 'Arial', sans-serif;
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
+  @media (max-width: 320px) {
+    padding: 10px;
+  }
 `;
 
 const ChartTitle = styled.h3`
@@ -27,11 +33,16 @@ const ChartContainer = styled.div`
   position: relative;
   width: 100%;
   height: 300px;
+  @media (max-width: 480px) {
+    height: 200px;
+  }
+  @media (max-width: 320px) {
+    height: 160px;
+  }
 `;
 
 export const Diagram = ({ hourlyData = [] }) => {
   const displayData = hourlyData.slice(0, 10);
-
   const labels = displayData.map((hour, index) => {
     const date = new Date(hour.dt * 1000);
     if (index === 1) {
@@ -39,7 +50,6 @@ export const Diagram = ({ hourlyData = [] }) => {
     }
     return date.toLocaleTimeString('en-UA', { hour: 'numeric', hour12: true }).toLowerCase();
   });
-
   const temperatures = displayData.map(hour => Math.round(hour.main.temp));
 
   const data = {

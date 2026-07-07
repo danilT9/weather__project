@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { getNewsFromApi } from "../../../api/news/news";
 
 const Container = styled.div`
-font-family: "Montserrat", sans-serif;
-font-weight: 500;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
   gap: 40px;
   display: flex;
   justify-content: center;
@@ -18,13 +18,14 @@ font-weight: 500;
     font-size: 20px;
     justify-content: start;
   }
-`
+`;
 
 const PetsNewsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-`
+  width: 100%;
+`;
 
 const PetsNewsContainerList = styled.ul`
   list-style: none;
@@ -34,7 +35,9 @@ const PetsNewsContainerList = styled.ul`
   gap: 20px;
   padding: 6px;
   margin: 0;
-`
+  width: 100%;
+  box-sizing: border-box;
+`;
 
 const PetsNewsContainerListItemStyled = styled.li`
   display: flex;
@@ -48,8 +51,16 @@ const PetsNewsContainerListItemStyled = styled.li`
     border-radius: 10px;
     width: 270px;
     height: 208px;
+    object-fit: cover;
   }
-`
+  @media (max-width: 768px) {
+    width: 100%;
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+`;
 
 const PetsNewsContainerListItem = ({ src, title }) => {
   const placeholder = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1920px-No-Image-Placeholder.svg.png";
@@ -57,16 +68,15 @@ const PetsNewsContainerListItem = ({ src, title }) => {
     e.target.onerror = null; 
     e.target.src = placeholder;
   };
-  
   return (
     <PetsNewsContainerListItemStyled>
       <div>
-        <img src={src || placeholder} width="270px" height="208px" alt={title} onError={handleImgError} />
+        <img src={src || placeholder} alt={title} onError={handleImgError} />
       </div>
       <p>{title}</p>
     </PetsNewsContainerListItemStyled>
   );
-}
+};
 
 const PetsNewsSeeMoreButtonStyled = styled.button`
   font-size: 14px;
@@ -75,6 +85,8 @@ const PetsNewsSeeMoreButtonStyled = styled.button`
   border: none;
   border-radius: 10px;
   width: 130px;
+  margin: 20px auto 0 auto;
+  cursor: pointer;
 `;
 
 export const PetsNews = () => {
@@ -89,22 +101,22 @@ export const PetsNews = () => {
         const dateString = `${nowDate.getFullYear()}-${nowDate.getMonth()}-${nowDate.getDate()}`;
         const res = await getNewsFromApi({ data: dateString });
         if (res && res.articles) {
-          setArticles(res.articles)
+          setArticles(res.articles);
         }
       } catch (e) {
         console.log(e);
       } finally {
         setIsLoading(false);
       }
-    }
+    };
     fetchNews();
   }, []);
 
   const handleSeeMore = () => {
     setVisibleArticles(prevVisible => prevVisible + 4);
-  }
+  };
 
-  if (isLoading) return <p>Loading...</p>
+  if (isLoading) return <p>Loading...</p>;
   
   return (
     <Container>
@@ -112,11 +124,7 @@ export const PetsNews = () => {
       <PetsNewsContainer>
         <PetsNewsContainerList>
           {articles.slice(0, visibleArticles).map((a, i) => (
-            <PetsNewsContainerListItem
-              key={i}
-              src={a.urlToImage}
-              title={a.title}
-            />
+            <PetsNewsContainerListItem key={i} src={a.urlToImage} title={a.title} />
           ))}
         </PetsNewsContainerList>
         {visibleArticles < articles.length && (
@@ -125,4 +133,4 @@ export const PetsNews = () => {
       </PetsNewsContainer>
     </Container>
   );
-}
+};

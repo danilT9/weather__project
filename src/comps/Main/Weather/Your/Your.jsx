@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import { getWeatherIcon } from "../WeatherIcon"; 
+import { getWeatherIcon } from "../WIcon"; 
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { LuRefreshCw } from "react-icons/lu";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -18,6 +18,7 @@ const WeatherList = styled.ul`
   z-index: 1;
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
   * {
     padding: 0;
     margin: 0;
@@ -25,14 +26,18 @@ const WeatherList = styled.ul`
   button {
     cursor: pointer;
   }
-`
+  @media (max-width: 480px) {
+    gap: 20px;
+    padding: 0 10px;
+  }
+`;
 
 const WeatherListItemStyled = styled.li`
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 20px;
-  background-color: ${props => props.$isActive ? "#FFFFFF" : "#E8E8E8"};
+  background-color: ${props => props.$isActive ? "rgb(255, 255, 255)" : "rgb(225, 225, 225)"};
   border: ${props => props.$isActive ? "2px solid #FFB36C" : "2px solid transparent"};
   padding: 15px;
   width: 320px;
@@ -40,6 +45,13 @@ const WeatherListItemStyled = styled.li`
   flex-direction: column;
   box-sizing: border-box;
   transition: all 0.2s ease;
+  cursor: pointer;
+
+  @media (max-width: 360px) {
+    width: 100%;
+    height: auto;
+    min-height: 400px;
+  }
 `;
 
 const WeatherListItemContainer = styled.div`
@@ -84,6 +96,12 @@ const WeatherListItemContainerForecastContainer = styled.div`
     transition: background 0.2s;
     &:hover { background-color: #ffa043; }
   }
+  @media (max-width: 360px) {
+    gap: 10px;
+    button {
+      padding: 8px 10px;
+    }
+  }
 `;
 
 const WeatherListItemContainerTimeContainer = styled.div`
@@ -104,7 +122,6 @@ const WeatherListItemContainerButtonsStyled = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-
   .left-actions, .right-actions {
     display: flex;
     align-items: center;
@@ -142,14 +159,11 @@ const WeatherListItemContainerButtonsStyled = styled.div`
 
 const WeatherListItem = ({ city, weatherData, isActive, onSelect, onRefresh, onDelete, onToggleFavorite, setViewMode }) => {
   if (!weatherData) return <WeatherListItemStyled>Loading data...</WeatherListItemStyled>;
-
   const currentPeriod = weatherData.list?.[0];
   const temp = currentPeriod ? Math.round(currentPeriod.main.temp) : "--";
   const iconCode = currentPeriod ? currentPeriod.weather[0].icon : "01d";
-
   const timezoneOffset = weatherData.city?.timezone || 0; 
   const localDate = new Date(new Date().getTime() + (timezoneOffset * 1000) + (new Date().getTimezoneOffset() * 60000));
-
   const timeStr = localDate.toLocaleTimeString("en-UA", { hour: "2-digit", minute: "2-digit", hour12: false });
   const dateStr = localDate.toLocaleDateString("en-UA", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, ".");
   const dayName = localDate.toLocaleDateString("en-UA", { weekday: "long" });
